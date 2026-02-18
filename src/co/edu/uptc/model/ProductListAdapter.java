@@ -1,9 +1,5 @@
 package co.edu.uptc.model;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import co.edu.uptc.pojo.Producto;
 
 public class ProductListAdapter {
@@ -21,23 +17,114 @@ public class ProductListAdapter {
         list.addEnd(serialize(producto));
     }
 
-    public List<Producto> toList() {
-        List<Producto> productos = new ArrayList<>();
+    public Producto[] toArray() {
+        // Contar primero
+        int count = 0;
         Node current = list.header;
+        while (current != null) {
+            count++;
+            current = current.sig;
+        }
+
+        // Crear array y llenar
+        Producto[] productos = new Producto[count];
+        current = list.header;
+        int index = 0;
         while (current != null) {
             Producto producto = deserialize(current.value);
             if (producto != null) {
-                productos.add(producto);
+                productos[index++] = producto;
             }
             current = current.sig;
         }
         return productos;
     }
 
-    public List<Producto> sortedByDescripcion() {
-        List<Producto> productos = toList();
-        productos.sort(Comparator.comparing(Producto::getDescripcion, String.CASE_INSENSITIVE_ORDER));
-        return productos;
+    public Producto[] sortedByDescripcion() {
+        if (list.header == null) {
+            return new Producto[0];
+        }
+
+        // Clonar la lista para no modificar la original
+        ManagerList sortedList = cloneList();
+        
+        // Insertion sort sobre los nodos
+        sortedList.header = insertionSort(sortedList.header);
+        
+        // Contar elementos
+        int count = 0;
+        Node current = sortedList.header;
+        while (current != null) {
+            count++;
+            current = current.sig;
+        }
+
+        // Convertir a array
+        Producto[] result = new Producto[count];
+        current = sortedList.header;
+        int index = 0;
+        while (current != null) {
+            Producto producto = deserialize(current.value);
+            if (producto != null) {
+                result[index++] = producto;
+            }
+            current = current.sig;
+        }
+        return result;
+    }
+
+    private ManagerList cloneList() {
+        ManagerList cloned = new ManagerList();
+        Node current = list.header;
+        while (current != null) {
+            cloned.addEnd(current.value);
+            current = current.sig;
+        }
+        return cloned;
+    }
+
+    private Node insertionSort(Node head) {
+        if (head == null || head.sig == null) {
+            return head;
+        }
+
+        Node sorted = null;
+        Node current = head;
+
+        while (current != null) {
+            Node next = current.sig;
+            sorted = insertSorted(sorted, current);
+            current = next;
+        }
+
+        return sorted;
+    }
+
+    private Node insertSorted(Node sorted, Node newNode) {
+        if (sorted == null || compareDescripcion(newNode.value, sorted.value) <= 0) {
+            newNode.sig = sorted;
+            return newNode;
+        }
+
+        Node current = sorted;
+        while (current.sig != null && compareDescripcion(newNode.value, current.sig.value) > 0) {
+            current = current.sig;
+        }
+
+        newNode.sig = current.sig;
+        current.sig = newNode;
+        return sorted;
+    }
+
+    private int compareDescripcion(String value1, String value2) {
+        Producto p1 = deserialize(value1);
+        Producto p2 = deserialize(value2);
+        
+        if (p1 == null || p2 == null) {
+            return 0;
+        }
+        
+        return p1.getDescripcion().compareToIgnoreCase(p2.getDescripcion());
     }
 
     public int removeByDescripcionContains(String texto) {

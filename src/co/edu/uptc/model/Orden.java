@@ -1,7 +1,5 @@
 package co.edu.uptc.model;
 
-import java.util.List;
-
 import co.edu.uptc.interfaces.IOrdenModel;
 import co.edu.uptc.pojo.Producto;
 
@@ -18,12 +16,12 @@ public class Orden implements IOrdenModel {
 	}
 
 	@Override
-	public List<Producto> obtenerProductos() {
-		return productos.toList();
+	public Producto[] obtenerProductos() {
+		return productos.toArray();
 	}
 
 	@Override
-	public List<Producto> obtenerProductosOrdenadosPorNombre() {
+	public Producto[] obtenerProductosOrdenadosPorNombre() {
 		return productos.sortedByDescripcion();
 	}
 

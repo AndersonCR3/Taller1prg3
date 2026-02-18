@@ -1,6 +1,5 @@
 package co.edu.uptc.view;
 
-import java.util.List;
 import java.util.Scanner;
 
 import co.edu.uptc.interfaces.IProductView;
@@ -33,16 +32,14 @@ public class ConsoleProductView implements IProductView {
     }
 
     @Override
-    public void mostrarProductos(List<Producto> productos, String titulo) {
+    public void mostrarProductos(Producto[] productos, String titulo) {
         System.out.println("\n" + titulo + ":");
-        if (productos == null || productos.isEmpty()) {
+        if (productos == null || productos.length == 0) {
             System.out.println("Sin productos.");
             return;
         }
-        int index = 1;
-        for (Producto producto : productos) {
-            System.out.println(index + ". " + producto);
-            index++;
+        for (int i = 0; i < productos.length; i++) {
+            System.out.println((i + 1) + ". " + productos[i]);
         }
     }
 

@@ -1,9 +1,7 @@
 package co.edu.uptc.model;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.List;
 
 import co.edu.uptc.interfaces.IOrdenModel;
 import co.edu.uptc.pojo.Producto;
@@ -23,15 +21,15 @@ public class OrdenLinkedList implements IOrdenModel {
     }
 
     @Override
-    public List<Producto> obtenerProductos() {
-        return new ArrayList<>(productos);
+    public Producto[] obtenerProductos() {
+        return productos.toArray(new Producto[0]);
     }
 
     @Override
-    public List<Producto> obtenerProductosOrdenadosPorNombre() {
-        List<Producto> ordenados = new ArrayList<>(productos);
+    public Producto[] obtenerProductosOrdenadosPorNombre() {
+        LinkedList<Producto> ordenados = new LinkedList<>(productos);
         ordenados.sort(Comparator.comparing(Producto::getDescripcion, String.CASE_INSENSITIVE_ORDER));
-        return ordenados;
+        return ordenados.toArray(new Producto[0]);
     }
 
     @Override

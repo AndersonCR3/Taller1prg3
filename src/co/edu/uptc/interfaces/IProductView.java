@@ -1,7 +1,5 @@
 package co.edu.uptc.interfaces;
 
-import java.util.List;
-
 import co.edu.uptc.pojo.Producto;
 
 public interface IProductView {
@@ -9,7 +7,7 @@ public interface IProductView {
 
     Producto solicitarProducto();
 
-    void mostrarProductos(List<Producto> productos, String titulo);
+    void mostrarProductos(Producto[] productos, String titulo);
 
     void mostrarMensaje(String mensaje);
 
